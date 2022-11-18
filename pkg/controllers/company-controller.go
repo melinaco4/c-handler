@@ -2,19 +2,11 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/melinaco4/company-manager/pkg/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
-
-type Company struct {
-	ID                string `json:"id,omitempty" bson:"_id,omitempty"`
-	Name              string `json:"name"`
-	Description       string `json:"description"`
-	AmountOfEmployees int    `json:"amount_of_employees"`
-	Registered        bool   `json: "registered"`
-	Type              string `json: "type"`
-}
 
 func status(c *fiber.Ctx) error {
 	return c.SendString("Server is running! Send your request")
@@ -29,7 +21,7 @@ func GetCompanies(c *fiber.Ctx) error {
 		return c.Status(500).SendString(err.Error())
 	}
 
-	var companies []Company = make([]Company, 0)
+	var companies []models.Company = make([]models.Company, 0)
 
 	if err := cursor.All(c.Context(), &companies); err != nil {
 		return c.Status(500).SendString(err.Error())
@@ -42,7 +34,7 @@ func GetCompanies(c *fiber.Ctx) error {
 func CreateCompany(c *fiber.Ctx) error {
 	collection := mg.Db.Collection("companies")
 
-	company := new(Company)
+	company := new(models.Company)
 
 	if err := c.BodyParser(company); err != nil {
 		return c.Status(500).SendString(err.Error())
@@ -58,7 +50,7 @@ func CreateCompany(c *fiber.Ctx) error {
 	filter := bson.D{{Key: "_id", Value: insertionResult.InsertedID}}
 	createdRecord := collection.FindOne(c.Context(), filter)
 
-	createdCompany := &Company{}
+	createdCompany := &models.Company{}
 	createdRecord.Decode(createdCompany)
 
 	return c.Status(201).JSON(createdCompany)
@@ -74,7 +66,7 @@ func UpdateCompany(c *fiber.Ctx) error {
 		return c.SendStatus(400)
 	}
 
-	company := new(Company)
+	company := new(models.Company)
 
 	if err := c.BodyParser(company); err != nil {
 		return c.Status(400).SendString(err.Error())
