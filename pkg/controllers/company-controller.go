@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -51,12 +50,12 @@ func CreateCompany(c *fiber.Ctx) error {
 
 	company.ID = " "
 
-	//insertionResult, err := collection.InsertOne(c.Context(), company)
-	//if err != nil {
-	//	return c.Status(500).SendString(err.Error())
-	//}
+	insertionResult, err := collection.InsertOne(c.Context(), company)
+	if err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
 
-	filter := bson.D{{Key: "_id", Value: uuid.New()}}
+	filter := bson.D{{Key: "_id", Value: insertionResult.InsertedID}}
 	createdRecord := collection.FindOne(c.Context(), filter)
 
 	createdCompany := &Company{}
