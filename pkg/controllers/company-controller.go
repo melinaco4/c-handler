@@ -16,6 +16,10 @@ type Company struct {
 	Type              string `json: "type"`
 }
 
+func status(c *fiber.Ctx) error {
+	return c.SendString("Server is running! Send your request")
+}
+
 func GetCompanies(c *fiber.Ctx) error {
 
 	query := bson.D{{}}
