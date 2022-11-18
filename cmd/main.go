@@ -3,13 +3,12 @@ package main
 import (
 	"log"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/melinaco4/c-handler/pkg/controllers"
 )
 
 func setupRoutes(app *fiber.App) {
-
-	app.Get("/", controllers.status)
 
 	app.Get("/companies", controllers.GetCompanies)
 	app.Post("/company", controllers.CreateCompany)
@@ -24,5 +23,6 @@ func main() {
 	app := fiber.New()
 
 	setupRoutes(app)
-	app.Listen(3000)
+
+	log.Fatal(app.Listen(":3000"))
 }

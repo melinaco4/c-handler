@@ -40,7 +40,7 @@ func GetCompanies(c *fiber.Ctx) error {
 }
 
 func CreateCompany(c *fiber.Ctx) error {
-	collection := mg.Db.Collection("employees")
+	collection := mg.Db.Collection("companies")
 
 	company := new(Company)
 
